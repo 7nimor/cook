@@ -29,7 +29,7 @@ class RecipeView(viewsets.ModelViewSet):
             query = self.queryset.filter(trash=False).order_by('id')[start:stop]
             srz_data = self.serializer_class(query, many=True)
             return Response(srz_data.data, status=status.HTTP_200_OK)
-        if 'type' in request.GET:
+        elif 'type' in request.GET:
             if request.GET['type'] == 'filter':
                 for item in self.filterset_fields:
                     quer = QueryDict('{0}__contains={1}'.format(item, request.GET['value']))
