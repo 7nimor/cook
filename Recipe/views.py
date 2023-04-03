@@ -83,3 +83,13 @@ class ReviewViews(viewsets.ModelViewSet):
             srz_data1 = self.serializer_class(query)
             return Response(srz_data1.data, status=status.HTTP_201_CREATED)
         return Response(srz_data.errors)
+
+
+class RandomView(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializersList
+
+    def list(self, request, *args, **kwargs):
+        random_recipe = Recipe.objects.order_by('?').first()
+        srz_data = self.serializer_class(random_recipe)
+        return Response(srz_data.data, status=status.HTTP_200_OK)
