@@ -1,4 +1,5 @@
 import datetime
+from taggit.managers import TaggableManager
 
 from django.db import models
 
@@ -35,7 +36,7 @@ class Review(models.Model):
 class Recipe(models.Model):
     name = models.CharField(max_length=400, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    categories = models.CharField(max_length=200, null=True, blank=True)
+    categories = models.ManyToManyField(to="Cat",null=True, blank=True)
     ingredients = models.TextField(max_length=500, null=True, blank=True)
     difficulty = models.CharField(max_length=200, choices=dificulty_choices, null=True, blank=True)
     nutrition_value = models.ForeignKey('NutritionValue', on_delete=models.CASCADE, null=True,
@@ -81,3 +82,13 @@ class NutritionValue(models.Model):
 
     def __str__(self):
         return self.name
+
+class Cat(models.Model):
+    name=models.CharField(max_length=200,null=True,blank=True)
+    image=models.TextField(null=True,blank=True)
+    class Meta:
+        verbose_name = 'دسته بندی'
+        verbose_name_plural = 'دسته بندی ها'
+
+    # def __str__(self):
+    #     return self.name

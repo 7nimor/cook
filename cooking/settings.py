@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Recipe',
     'django_filters',
     'url_filter',
+    'taggit',
 
 ]
 

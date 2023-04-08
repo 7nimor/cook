@@ -3,8 +3,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .filterset import RecipeFilterSet
-from .models import Recipe, Review
-from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList
+from .models import Recipe, Review, Cat
+from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList,CategorySerailizers
 
 
 # Create your views here.
@@ -92,4 +92,59 @@ class RandomView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         random_recipe = Recipe.objects.order_by('?').first()
         srz_data = self.serializer_class(random_recipe)
+        import requests
+        from bs4 import BeautifulSoup
+
+        # url = 'https://www.tasvirezendegi.com/cookery/food/page/2/'
+        # response = requests.get(url)
+        # soup = BeautifulSoup(response.content, 'html.parser')
+        # div_tags = soup.find_all('div', class_='btn-cat')
+        # h3_tags = [tag.find_all('a') for tag in div_tags]
+        # for tag in h3_tags:
+        #     for tags in tag:
+        #         link = (tags["href"])
+        #         urls = link
+        #         response = requests.get(urls)
+        #         soup = BeautifulSoup(response.content, 'html.parser')
+        #         h1 = soup.find_all('h1')
+        #         for tag in h1:
+        #             title = (tag.text)
+        #         category = soup.find_all('div', class_='entry-tags')
+        #         a = [tag.find_all('a') for tag in category]
+        #         for tag in a:
+        #             m=[]
+        #             for t in tag:
+        #
+        #                 m.append(t.text)
+        #             categories=','.join(m)
+        #         content = soup.find('div', id='mohtava')
+        #
+        #         Recipe.objects.create(
+        #             name=title,
+        #             # content=content,
+        #             categories=categories,
+        #
+        #         )
+                # for recipe in Recipe.objects.all():
+                #     recipe.name=tag.text
+                #     recipe.save()
+                #
+
         return Response(srz_data.data, status=status.HTTP_200_OK)
+
+class CategoryView(viewsets.ModelViewSet):
+    queryset = Cat
+    serializer_class = CategorySerailizers
+
+    def list(self, request, *args, **kwargs):
+        query=self.queryset.objects.all()
+        srz_data=self.serializer_class(query,many=True)
+
+        return Response(srz_data.data,status=status.HTTP_200_OK)
+
+    def destroy(self, request,pk=None, *args, **kwargs):
+        query=self.queryset.objects.filter(pk=pk)
+        query.delete()
+        return Response({'msg':'object was delete'},status=status.HTTP_200_OK)
+
+

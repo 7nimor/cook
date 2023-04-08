@@ -8,3 +8,4 @@ class ReadOnly(admin.ModelAdmin):
 admin.site.register(models.Review)
 admin.site.register(models.NutritionValue)
 admin.site.register(models.Recipe)
+admin.site.register(models.Cat)

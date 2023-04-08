@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Recipe, Review, NutritionValue
+from .models import Recipe, Review, NutritionValue, Cat
 
 
 class RecipeSerializersList(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'name', 'photos', 'difficulty', 'categories', 'ingredients', 'cook_time']
-
+        depth=1
 
 class RecipeSerializers(serializers.ModelSerializer):
     review = serializers.SerializerMethodField('get_review')
@@ -47,3 +47,9 @@ class NutritionValueSerializers(serializers.ModelSerializer):
     class Meta:
         model = NutritionValue
         fields = '__all__'
+
+
+class CategorySerailizers(serializers.ModelSerializer):
+    class Meta:
+        model=Cat
+        fields='__all__'
