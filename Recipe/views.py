@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from .filterset import RecipeFilterSet
 from .models import Recipe, Review, Cat
 from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList,CategorySerailizers
-
+import requests
+from bs4 import BeautifulSoup
 
 # Create your views here.
 
@@ -92,8 +93,6 @@ class RandomView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         random_recipe = Recipe.objects.order_by('?').first()
         srz_data = self.serializer_class(random_recipe)
-        import requests
-        from bs4 import BeautifulSoup
 
         # url = 'https://www.tasvirezendegi.com/cookery/food/page/2/'
         # response = requests.get(url)
