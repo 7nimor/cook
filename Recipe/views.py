@@ -18,9 +18,10 @@ class RecipeView(viewsets.ModelViewSet):
     filter_class = RecipeFilterSet
     filterset_fields = [
         'name',
-        'categories',
+        'categories__name',
         'ingredients',
     ]
+
 
     def list(self, request, *args, **kwargs):
         query = self.queryset.filter(trash=False)
@@ -72,6 +73,7 @@ class ReviewViews(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewsSerializers
 
+
     def list(self, request, *args, **kwargs):
         query = self.queryset.filter(trash=False).order_by('-id')[:10]
         srz_sata = self.serializer_class(query, many=True)
@@ -84,6 +86,7 @@ class ReviewViews(viewsets.ModelViewSet):
             srz_data1 = self.serializer_class(query)
             return Response(srz_data1.data, status=status.HTTP_201_CREATED)
         return Response(srz_data.errors)
+
 
 
 class RandomView(viewsets.ModelViewSet):
@@ -134,6 +137,7 @@ class RandomView(viewsets.ModelViewSet):
 class CategoryView(viewsets.ModelViewSet):
     queryset = Cat
     serializer_class = CategorySerailizers
+
 
     def list(self, request, *args, **kwargs):
         query=self.queryset.objects.all()
