@@ -1,13 +1,11 @@
 from django.http import QueryDict
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status, pagination
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .filterset import RecipeFilterSet
 from .models import Recipe, Review, Cat
 from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList, Category_Serailizers
-
 import requests
 from bs4 import BeautifulSoup
 
@@ -101,17 +99,11 @@ class RandomView(viewsets.ModelViewSet):
         return Response(srz_data.data, status=status.HTTP_200_OK)
 
 
-class ProductPagination(pagination.PageNumberPagination):
-    page_size = 1
-    page_query_param = 'page'
-    page_size_query_param = 'per_page'
-    max_page_size = 3
 
 
 class CategoryView(viewsets.ModelViewSet):
     queryset = Cat
     serializer_class = Category_Serailizers
-    pagination_class = ProductPagination
 
     def list(self, request, *args, **kwargs):
         query = self.queryset.objects.all()
@@ -124,7 +116,7 @@ class CategoryView(viewsets.ModelViewSet):
         query.delete()
         return Response({'msg': 'object was delete'}, status=status.HTTP_200_OK)
 
-
+#for add item from web to db
 @APIView
 def Recive(request):
     url = 'https://www.tasvirezendegi.com/cookery/food/page/2/'
