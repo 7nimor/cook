@@ -1,12 +1,16 @@
 from django.http import QueryDict
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, pagination
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .filterset import RecipeFilterSet
 from .models import Recipe, Review, Cat
-from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList,CategorySerailizers
+from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList, Category_Serailizers
+
 import requests
 from bs4 import BeautifulSoup
+
 
 # Create your views here.
 
@@ -21,7 +25,6 @@ class RecipeView(viewsets.ModelViewSet):
         'categories__name',
         'ingredients',
     ]
-
 
     def list(self, request, *args, **kwargs):
         query = self.queryset.filter(trash=False)
@@ -73,7 +76,6 @@ class ReviewViews(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewsSerializers
 
-
     def list(self, request, *args, **kwargs):
         query = self.queryset.filter(trash=False).order_by('-id')[:10]
         srz_sata = self.serializer_class(query, many=True)
@@ -88,7 +90,6 @@ class ReviewViews(viewsets.ModelViewSet):
         return Response(srz_data.errors)
 
 
-
 class RandomView(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializersList
@@ -97,57 +98,64 @@ class RandomView(viewsets.ModelViewSet):
         random_recipe = Recipe.objects.order_by('?').first()
         srz_data = self.serializer_class(random_recipe)
 
-        # url = 'https://www.tasvirezendegi.com/cookery/food/page/2/'
-        # response = requests.get(url)
-        # soup = BeautifulSoup(response.content, 'html.parser')
-        # div_tags = soup.find_all('div', class_='btn-cat')
-        # h3_tags = [tag.find_all('a') for tag in div_tags]
-        # for tag in h3_tags:
-        #     for tags in tag:
-        #         link = (tags["href"])
-        #         urls = link
-        #         response = requests.get(urls)
-        #         soup = BeautifulSoup(response.content, 'html.parser')
-        #         h1 = soup.find_all('h1')
-        #         for tag in h1:
-        #             title = (tag.text)
-        #         category = soup.find_all('div', class_='entry-tags')
-        #         a = [tag.find_all('a') for tag in category]
-        #         for tag in a:
-        #             m=[]
-        #             for t in tag:
-        #
-        #                 m.append(t.text)
-        #             categories=','.join(m)
-        #         content = soup.find('div', id='mohtava')
-        #
-        #         Recipe.objects.create(
-        #             name=title,
-        #             # content=content,
-        #             categories=categories,
-        #
-        #         )
-                # for recipe in Recipe.objects.all():
-                #     recipe.name=tag.text
-                #     recipe.save()
-                #
-
         return Response(srz_data.data, status=status.HTTP_200_OK)
+
+
+class ProductPagination(pagination.PageNumberPagination):
+    page_size = 1
+    page_query_param = 'page'
+    page_size_query_param = 'per_page'
+    max_page_size = 3
+
 
 class CategoryView(viewsets.ModelViewSet):
     queryset = Cat
-    serializer_class = CategorySerailizers
-
+    serializer_class = Category_Serailizers
+    pagination_class = ProductPagination
 
     def list(self, request, *args, **kwargs):
-        query=self.queryset.objects.all()
-        srz_data=self.serializer_class(query,many=True)
+        query = self.queryset.objects.all()
+        srz_data = self.serializer_class(query, many=True)
 
-        return Response(srz_data.data,status=status.HTTP_200_OK)
+        return Response(srz_data.data, status=status.HTTP_200_OK)
 
-    def destroy(self, request,pk=None, *args, **kwargs):
-        query=self.queryset.objects.filter(pk=pk)
+    def destroy(self, request, pk=None, *args, **kwargs):
+        query = self.queryset.objects.filter(pk=pk)
         query.delete()
-        return Response({'msg':'object was delete'},status=status.HTTP_200_OK)
+        return Response({'msg': 'object was delete'}, status=status.HTTP_200_OK)
 
 
+@APIView
+def Recive(request):
+    url = 'https://www.tasvirezendegi.com/cookery/food/page/2/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    div_tags = soup.find_all('div', class_='btn-cat')
+    h3_tags = [tag.find_all('a') for tag in div_tags]
+    for tag in h3_tags:
+        for tags in tag:
+            link = (tags["href"])
+            urls = link
+            response = requests.get(urls)
+            soup = BeautifulSoup(response.content, 'html.parser')
+            h1 = soup.find_all('h1')
+            for tag in h1:
+                title = (tag.text)
+            category = soup.find_all('div', class_='entry-tags')
+            a = [tag.find_all('a') for tag in category]
+            for tag in a:
+                m = []
+                for t in tag:
+                    m.append(t.text)
+                categories = ','.join(m)
+            content = soup.find('div', id='mohtava')
+        #
+        #     Recipe.objects.create(
+        #         name=title,
+        #         # content=content,
+        #         categories=categories,
+        #
+        #     )
+        # for recipe in Recipe.objects.all():
+        #     recipe.name=tag.text
+        #     recipe.save()

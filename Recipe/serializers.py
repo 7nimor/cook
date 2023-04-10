@@ -6,7 +6,8 @@ class RecipeSerializersList(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'name', 'photos', 'difficulty', 'categories', 'cook_time']
-        depth=1
+        depth = 1
+
 
 class RecipeSerializers(serializers.ModelSerializer):
     review = serializers.SerializerMethodField('get_review')
@@ -49,7 +50,7 @@ class NutritionValueSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CategorySerailizers(serializers.ModelSerializer):
+class Category_Serailizers(serializers.ModelSerializer):
     class Meta:
-        model=Cat
-        fields='__all__'
+        model = Cat
+        fields = '__all__'
