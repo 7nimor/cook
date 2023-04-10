@@ -117,30 +117,30 @@ class CategoryView(viewsets.ModelViewSet):
         return Response({'msg': 'object was delete'}, status=status.HTTP_200_OK)
 
 #for add item from web to db
-@APIView
-def Recive(request):
-    url = 'https://www.tasvirezendegi.com/cookery/food/page/2/'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    div_tags = soup.find_all('div', class_='btn-cat')
-    h3_tags = [tag.find_all('a') for tag in div_tags]
-    for tag in h3_tags:
-        for tags in tag:
-            link = (tags["href"])
-            urls = link
-            response = requests.get(urls)
-            soup = BeautifulSoup(response.content, 'html.parser')
-            h1 = soup.find_all('h1')
-            for tag in h1:
-                title = (tag.text)
-            category = soup.find_all('div', class_='entry-tags')
-            a = [tag.find_all('a') for tag in category]
-            for tag in a:
-                m = []
-                for t in tag:
-                    m.append(t.text)
-                categories = ','.join(m)
-            content = soup.find('div', id='mohtava')
+# @APIView
+# def Recive(request):
+#     url = 'https://www.tasvirezendegi.com/cookery/food/page/2/'
+#     response = requests.get(url)
+#     soup = BeautifulSoup(response.content, 'html.parser')
+#     div_tags = soup.find_all('div', class_='btn-cat')
+#     h3_tags = [tag.find_all('a') for tag in div_tags]
+#     for tag in h3_tags:
+#         for tags in tag:
+#             link = (tags["href"])
+#             urls = link
+#             response = requests.get(urls)
+#             soup = BeautifulSoup(response.content, 'html.parser')
+#             h1 = soup.find_all('h1')
+#             for tag in h1:
+#                 title = (tag.text)
+#             category = soup.find_all('div', class_='entry-tags')
+#             a = [tag.find_all('a') for tag in category]
+#             for tag in a:
+#                 m = []
+#                 for t in tag:
+#                     m.append(t.text)
+#                 categories = ','.join(m)
+#             content = soup.find('div', id='mohtava')
         #
         #     Recipe.objects.create(
         #         name=title,
