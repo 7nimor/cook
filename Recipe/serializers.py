@@ -54,3 +54,8 @@ class Category_Serailizers(serializers.ModelSerializer):
     class Meta:
         model = Cat
         fields = '__all__'
+
+class RandomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Recipe
+        fields= ['id', 'name', 'photos', 'difficulty', 'categories', 'cook_time','description']

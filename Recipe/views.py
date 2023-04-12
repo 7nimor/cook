@@ -2,15 +2,12 @@ from django.http import QueryDict
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from .filterset import RecipeFilterSet
 from .models import Recipe, Review, Cat
-from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList, Category_Serailizers
-import requests
-from bs4 import BeautifulSoup
-
-
-# Create your views here.
+from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList, Category_Serailizers,RandomSerializer
+# from rest_framework.views import APIView
+# import requests
+# from bs4 import BeautifulSoup
 
 
 class RecipeView(viewsets.ModelViewSet):
@@ -26,13 +23,8 @@ class RecipeView(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         query = self.queryset.filter(trash=False)
-        if 'page' in request.GET:
-            stop = int(request.GET['page']) * 10
-            start = stop - 10
-            query = self.queryset.filter(trash=False).order_by('id')[start:stop]
-            srz_data = self.serializer_class(query, many=True)
-            return Response(srz_data.data, status=status.HTTP_200_OK)
-        elif 'type' in request.GET:
+
+        if 'type' in request.GET:
             if request.GET['type'] == 'filter':
                 for item in self.filterset_fields:
                     quer = QueryDict('{0}__contains={1}'.format(item, request.GET['value']))
@@ -45,7 +37,13 @@ class RecipeView(viewsets.ModelViewSet):
                         query = ps.filter()
                         srz_data = self.serializer_class(query, many=True)
                         return Response(srz_data.data, status=status.HTTP_200_OK)
-            return Response({"msg": "Not Found !"}, status=status.HTTP_403_FORBIDDEN)
+            return Response([], status=status.HTTP_200_OK)
+        elif 'page' in request.GET:
+            stop = int(request.GET['page']) * 10
+            start = stop - 10
+            query = self.queryset.filter(trash=False).order_by('id')[start:stop]
+            srz_data = self.serializer_class(query, many=True)
+            return Response(srz_data.data, status=status.HTTP_200_OK)
         srz_data = self.serializer_class(query, many=True)
         return Response(srz_data.data, status=status.HTTP_200_OK)
 
@@ -90,7 +88,7 @@ class ReviewViews(viewsets.ModelViewSet):
 
 class RandomView(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializersList
+    serializer_class = RandomSerializer
 
     def list(self, request, *args, **kwargs):
         random_recipe = Recipe.objects.order_by('?').first()

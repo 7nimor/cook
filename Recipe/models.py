@@ -3,11 +3,7 @@ from django.db import models
 
 # Create your models here.
 
-dificulty_choices = (
-    ('easy', 'آسان'),
-    ('mid_level', 'متوسط'),
-    ('hard', 'سخت')
-)
+
 
 
 class Review(models.Model):
@@ -36,7 +32,7 @@ class Recipe(models.Model):
     description = models.TextField(null=True, blank=True)
     categories = models.ManyToManyField(to="Cat",null=True, blank=True,related_name='recipe_category')
     ingredients = models.TextField(max_length=500, null=True, blank=True)
-    difficulty = models.CharField(max_length=200, choices=dificulty_choices, null=True, blank=True)
+    difficulty = models.CharField(max_length=200, null=True, blank=True)
     nutrition_value = models.ForeignKey('NutritionValue', on_delete=models.CASCADE, null=True,
                                         related_name='nutrition', blank=True)
     photos = models.JSONField(null=True, blank=True)
@@ -89,5 +85,5 @@ class Cat(models.Model):
         verbose_name = 'دسته بندی'
         verbose_name_plural = 'دسته بندی ها'
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name
