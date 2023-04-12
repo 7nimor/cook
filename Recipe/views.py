@@ -4,7 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .filterset import RecipeFilterSet
 from .models import Recipe, Review, Cat
-from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList, Category_Serailizers,RandomSerializer
+from .serializers import ReviewsSerializers, RecipeSerializers, RecipeSerializersList, Category_Serailizers
 # from rest_framework.views import APIView
 # import requests
 # from bs4 import BeautifulSoup
@@ -88,7 +88,7 @@ class ReviewViews(viewsets.ModelViewSet):
 
 class RandomView(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    serializer_class = RandomSerializer
+    serializer_class = RecipeSerializersList
 
     def list(self, request, *args, **kwargs):
         random_recipe = Recipe.objects.order_by('?').first()

@@ -5,7 +5,7 @@ from .models import Recipe, Review, NutritionValue, Cat
 class RecipeSerializersList(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ['id', 'name', 'photos', 'difficulty', 'categories', 'cook_time']
+        fields = ['id', 'name', 'photos', 'difficulty', 'categories', 'cook_time','description']
         depth = 1
 
 
@@ -55,7 +55,3 @@ class Category_Serailizers(serializers.ModelSerializer):
         model = Cat
         fields = '__all__'
 
-class RandomSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Recipe
-        fields= ['id', 'name', 'photos', 'difficulty', 'categories', 'cook_time','description']
