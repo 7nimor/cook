@@ -1,9 +1,6 @@
 import datetime
 from django.db import models
-
 # Create your models here.
-
-
 
 
 class Review(models.Model):
@@ -31,12 +28,12 @@ class Recipe(models.Model):
     name = models.CharField(max_length=400, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     categories = models.ManyToManyField(to="Cat",null=True, blank=True,related_name='recipe_category')
-    ingredients = models.TextField(max_length=500, null=True, blank=True)
+    ingredients = models.TextField(null=True, blank=True)
     difficulty = models.CharField(max_length=200, null=True, blank=True)
     nutrition_value = models.ForeignKey('NutritionValue', on_delete=models.CASCADE, null=True,
                                         related_name='nutrition', blank=True)
     photos = models.JSONField(null=True, blank=True)
-    content = models.TextField(max_length=500, null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
     prep_time = models.IntegerField(null=True, blank=True)
     cook_time = models.IntegerField(null=True, blank=True)
     total_time = models.IntegerField(null=True, blank=True)
